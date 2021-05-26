@@ -1,0 +1,28 @@
+service: testpokemonspython
+
+provider:
+  name: aws
+  runtime: python3.6
+  profile: juan
+
+package:
+  individually: true
+
+layers:
+  TestLayer:
+    path: app/shared # required, path to layer contents on disk
+    name: pokemons-layerName # optional, Deployed Lambda layer name
+    compatibleRuntimes: # optional, a list of runtimes this layer is compatible with
+      - python3.8
+      - python3.7
+    retain: true # optional, false by default. If true, layer versions are not deleted as new ones are created
+
+functions:
+  ditto:
+    handler: app/f1/handler.lambda_handler
+    layers:
+      - { Ref: TestLayer2 }
+  pikachu:
+    handler: app/f2/handler.lambda_handler
+    layers:
+      - { Ref: TestLayer2 }
