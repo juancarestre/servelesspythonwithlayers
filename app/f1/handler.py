@@ -1,5 +1,7 @@
+import sys
+sys.path.append('./app/')
 import json
-from ..shared.dorequest import doreq
+from shared.dorequest import doreq
 
 def lambda_handler(event, context):
     # TODO implement

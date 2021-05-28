@@ -1,2 +1,4 @@
 .serverless/
 *.zip
+__pycache__
+python/

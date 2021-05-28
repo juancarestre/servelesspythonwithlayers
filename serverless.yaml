@@ -1,6 +1,6 @@
 service: testpokemonspython
 
-frameworkVersion: ">=1.1.0 <=2.8.0"
+# frameworkVersion: ">=1.1.0 <=2.8.0"
 
 provider:
   name: aws
@@ -10,8 +10,8 @@ provider:
 
 package: 
   individually: true
-  # exclude:
-  #   - "*/**"
+  exclude:
+    - "*/**"
 
 layers:
   dependencies:
@@ -27,13 +27,19 @@ layers:
 
 functions:
   ditto:
+    package:
+      include:
+        - app/f1/handler.py
     handler: app/f1/handler.lambda_handler
     layers:
       - { Ref: DependenciesLambdaLayer }
 
-resources:
+  pikachu:
+    package:
+      include:
+        - app/f2/handler.py
+    handler: app/f2/handler.lambda_handler
+    layers:
+      - { Ref: DependenciesLambdaLayer }
 
-  # pikachu:
-  #   handler: app/f2/handler.lambda_handler
-  #   layers:
-  #     - { Ref: DependenciesLambdaLayer }
+resources:
