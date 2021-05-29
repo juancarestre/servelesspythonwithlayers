@@ -1,12 +1,27 @@
 service: testpokemonspython
 
-# frameworkVersion: ">=1.1.0 <=2.8.0"
+custom:
+
+  owner: data
+  appname: pokemonapiclient
+
+  dev-region: us-east-1
+
+  AWSProfile: juan
+  env: ${opt:stage, self:provider.stage, 'dev'}
+  AWSRegion: ${self:custom.${self:custom.env}-region}
+
+  pokemon_api: "https://pokeapi.co/api/v2/pokemon/"
+
 
 provider:
   name: aws
   runtime: python3.7
-  profile: default
-  region: us-east-1
+  profile: juan #"${self:customs.AWSProfile}"
+  region: "${self:custom.AWSRegion}"
+  environment:
+    POKEMON_API_URL: "${self:customs.pokemon_api}"
+
 
 package: 
   individually: true
