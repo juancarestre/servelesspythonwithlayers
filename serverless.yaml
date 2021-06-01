@@ -1,5 +1,14 @@
 service: testpokemonspython
 
+plugins:
+  - serverless-python-requirements
+  - serverless-scriptable-plugin
+
+package: 
+  individually: true
+  exclude:
+    - "*/**"
+
 custom:
 
   owner: data
@@ -7,36 +16,53 @@ custom:
 
   dev-region: us-east-1
 
-  AWSProfile: juan
+  AWSProfile: default
   env: ${opt:stage, self:provider.stage, 'dev'}
   AWSRegion: ${self:custom.${self:custom.env}-region}
 
   pokemon_api: "https://pokeapi.co/api/v2/pokemon/"
 
+  pythonRequirements:
+    dockerizePip: true
+    dockerSsh: true
+    layer: true
+    fileName: app/shared_requeriments.txt
+
+  scriptable:
+    hooks:
+      before:package:createDeploymentArtifacts: cp -r app/shared .serverless/requirements/
 
 provider:
   name: aws
   runtime: python3.7
-  profile: juan #"${self:customs.AWSProfile}"
+  profile: "${self:custom.AWSProfile}"
   region: "${self:custom.AWSRegion}"
   environment:
-    POKEMON_API_URL: "${self:customs.pokemon_api}"
+    POKEMON_API_URL: "${self:custom.pokemon_api}"
+  ecr:
+    scanOnPush: true
+    images:
+      pythonhelloworldimage:
+        path: ./app/f4/
+        file: Dockerfile.dev
+        buildArgs:
+          STAGE: ${opt:stage}
+      blastoiseimage:
+        path: ./app/
+        file: f5/Dockerfile.dev
+        buildArgs:
+          STAGE: ${opt:stage}
 
-
-package: 
-  individually: true
-  exclude:
-    - "*/**"
 
 layers:
   dependencies:
     # path: app/shared # required, path to layer contents on disk
-    name: pokemons-dependencies # optional, Deployed Lambda layer name
+    name: pokemons-dependencies
     description: Dependencies
-    compatibleRuntimes: # optional, a list of runtimes this layer is compatible with
+    compatibleRuntimes:
       - python3.8
       - python3.7
-    retain: false # optional, false by default. If true, layer versions are not deleted as new ones are created
+    retain: false
     package:
       artifact: app/python.zip
 
@@ -48,13 +74,24 @@ functions:
     handler: app/f1/handler.lambda_handler
     layers:
       - { Ref: DependenciesLambdaLayer }
+      # - Ref: PythonRequirementsLambdaLayer
 
   pikachu:
+    runtime: python3.8
     package:
       include:
         - app/f2/handler.py
     handler: app/f2/handler.lambda_handler
     layers:
       - { Ref: DependenciesLambdaLayer }
+      - Ref: PythonRequirementsLambdaLayer
+
+
+  pythonhelloworldfunction:
+    image: pythonhelloworldimage
+
+  blastoise:
+    image: blastoiseimage
+
 
 resources:
