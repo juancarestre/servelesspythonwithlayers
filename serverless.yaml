@@ -67,6 +67,7 @@ layers:
       artifact: app/python.zip
 
 functions:
+  
   ditto:
     package:
       include:
@@ -85,7 +86,6 @@ functions:
     layers:
       - { Ref: DependenciesLambdaLayer }
       - Ref: PythonRequirementsLambdaLayer
-
 
   pythonhelloworldfunction:
     image: pythonhelloworldimage
