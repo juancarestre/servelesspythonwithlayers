@@ -12,7 +12,7 @@ RUN apk update && apk upgrade \
   && apk add bash curl make \
   && rm -rf /var/cache/apk/*
 
-RUN apk add npm==7.13.0-r0 && \
+RUN apk add npm==8.14.0-r0 && \
     npm install -g serverless
 
 RUN pip install awscli

@@ -6,8 +6,8 @@ plugins:
 
 package: 
   individually: true
-  exclude:
-    - "*/**"
+  patterns:
+    - "!*/**"
 
 custom:
 
@@ -16,7 +16,7 @@ custom:
 
   dev-region: us-east-1
 
-  AWSProfile: default
+  AWSProfile: juan
   env: ${opt:stage, self:provider.stage, 'dev'}
   AWSRegion: ${self:custom.${self:custom.env}-region}
 
@@ -33,6 +33,7 @@ custom:
       before:package:createDeploymentArtifacts: cp -r app/shared .serverless/requirements/
 
 provider:
+  lambdaHashingVersion: 20201221
   name: aws
   runtime: python3.7
   profile: "${self:custom.AWSProfile}"
@@ -46,12 +47,12 @@ provider:
         path: ./app/f4/
         file: Dockerfile.dev
         buildArgs:
-          STAGE: ${opt:stage}
+          STAGE: ${opt:stage, self:provider.stage, 'dev'}
       blastoiseimage:
         path: ./app/
         file: f5/Dockerfile.dev
         buildArgs:
-          STAGE: ${opt:stage}
+          STAGE: ${opt:stage, self:provider.stage, 'dev'}
 
 
 layers:
@@ -68,29 +69,29 @@ layers:
 
 functions:
   
-  ditto:
+  ditto: #f1
     package:
-      include:
-        - app/f1/handler.py
+      patterns:
+        - "app/f1/handler.py"
     handler: app/f1/handler.lambda_handler
     layers:
-      - { Ref: DependenciesLambdaLayer }
-      # - Ref: PythonRequirementsLambdaLayer
+      # - { Ref: DependenciesLambdaLayer }
+      - Ref: PythonRequirementsLambdaLayer
 
-  pikachu:
+  pikachu: #f2
     runtime: python3.8
     package:
-      include:
-        - app/f2/handler.py
+      patterns:
+        - "app/f2/handler.py"
     handler: app/f2/handler.lambda_handler
     layers:
       - { Ref: DependenciesLambdaLayer }
       - Ref: PythonRequirementsLambdaLayer
 
-  pythonhelloworldfunction:
+  pythonhelloworldfunction: #f3
     image: pythonhelloworldimage
 
-  blastoise:
+  blastoise: #f5
     image: blastoiseimage
 
 

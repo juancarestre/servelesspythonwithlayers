@@ -2,7 +2,7 @@ import sys
 sys.path.append('./app/')
 import json
 from shared.dorequest import doreq
-import pandas as pd
+import numpy as np
 
 def lambda_handler(event, context):
     # TODO implement
