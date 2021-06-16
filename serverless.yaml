@@ -77,6 +77,19 @@ functions:
     layers:
       # - { Ref: DependenciesLambdaLayer }
       - Ref: PythonRequirementsLambdaLayer
+    events:
+      - s3:
+          bucket: pokemontestbucket
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: ditto1/
+            - suffix: .txt
+      - s3:
+          bucket: pokemontestbucket
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: ditto2/
+            - suffix: .txt
 
   pikachu: #f2
     runtime: python3.8
@@ -93,6 +106,13 @@ functions:
 
   blastoise: #f5
     image: blastoiseimage
+    events:
+      - s3:
+          bucket: pokemontestbucket
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: blastoise/
+            - suffix: .txt
 
 
 resources:
