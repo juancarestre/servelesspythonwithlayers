@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"running test...\""
+    "test": "docker container run --rm -it serverless-app1 sh -c \"source .venv/bin/activate && pip install pytest && pytest\""
   },
   "repository": {
     "type": "git",
