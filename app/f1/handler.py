@@ -6,5 +6,4 @@ def lambda_handler(event, context):
     # TODO implement
     r = doreq(f'{os.environ["POKEMON_API_URL"]}ditto')
     print(r)
-    breakpoint()
     return r

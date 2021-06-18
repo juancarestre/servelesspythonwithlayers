@@ -90,6 +90,8 @@ functions:
           rules:
             - prefix: ditto2/
             - suffix: .txt
+      - schedule: rate(1 minute)
+
 
   pikachu: #f2
     runtime: python3.8
@@ -113,6 +115,7 @@ functions:
           rules:
             - prefix: blastoise/
             - suffix: .txt
+      - schedule: cron(15 3 ? * MON *)
 
 
 resources:
